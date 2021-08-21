@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "tarjeta-credito-67513": {
+      "hosting": {
+        "tarjeta-credito": [
+          "tarjeta-credito-67513"
+        ]
+      }
+    }
+  }
+}

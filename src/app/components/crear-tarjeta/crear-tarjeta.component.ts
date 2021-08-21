@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { TarjetaCredito } from 'src/app/models/TarjetaCredito';
+import { TarjetaService } from 'src/app/services/tarjeta.service';
 
 
 @Component({
@@ -9,33 +11,41 @@ import { TarjetaCredito } from 'src/app/models/TarjetaCredito';
   styleUrls: ['./crear-tarjeta.component.scss']
 })
 export class CrearTarjetaComponent implements OnInit {
-  form: FormGroup; 
+  form: FormGroup;
 
-  constructor( private fb: FormBuilder ) {
+  constructor(private fb: FormBuilder, private _tarjetaService: TarjetaService , private toastr :ToastrService ) {
     this.form = this.fb.group({
-      numeroTarjeta:[ '' , [Validators.required , Validators.minLength(16), Validators.maxLength(16) ] ],
-      titular:[ '' , Validators.required ],
-      fechaExpiracion: [ '' , [Validators.required , Validators.minLength(5), Validators.maxLength(5) ] ],
-      cvv: [ '' , [Validators.required , Validators.minLength(3), Validators.maxLength(3) ] ],
+      numeroTarjeta: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]],
+      titular: ['', Validators.required],
+      fechaExpiracion: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(5)]],
+      cvv: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
     })
-   }
+  }
 
   ngOnInit(): void {
   }
 
-  crearTarjeta(){
+  crearTarjeta() {
 
     const TARJETA: TarjetaCredito = {
-      titular: this.form.value.titular , 
-      numeroTarjeta: this.form.value.numeroTarjeta , 
-      fechaExpiracion: this.form.value.fechaExpiracion , 
-      cvv: this.form.value.cvv , 
-      fechaCreacion: new Date(), 
+      titular: this.form.value.titular,
+      numeroTarjeta: this.form.value.numeroTarjeta,
+      fechaExpiracion: this.form.value.fechaExpiracion,
+      cvv: this.form.value.cvv,
+      fechaCreacion: new Date(),
       fechaActualizacion: new Date()
     }
 
 
-    console.log(TARJETA) ; 
+    this._tarjetaService.guardarTarjeta(TARJETA).then(() => {
+      console.log('Tarjeta registrada correctamente ...');
+      this.toastr.success('La tarjeta fue registrada con exito ' , 'Tarjeta registrada' )
+      this.form.reset(); 
+    }, error => {
+      this.toastr.error('Opss ... ocurio un error ' , 'Error')
+      console.log(error);
+    });
+
   }
 
 }
