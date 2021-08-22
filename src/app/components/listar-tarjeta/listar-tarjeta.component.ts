@@ -42,4 +42,8 @@ export class ListarTarjetaComponent implements OnInit {
     } )
   }
 
+  editarTarjeta(tarjeta : TarjetaCredito){
+    this._tarjetaService.addTarjetaEdit(tarjeta); 
+  }
+
 }
